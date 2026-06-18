@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sleepaid">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Sleepaid</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Sleepaid</h1>
+  <div class="filters">
+    <button class="filter active" data-cat="all">All</button>
+    <button class="filter" data-cat="noise">Noise</button>
+    <button class="filter" data-cat="story">Stories</button>
+    <button id="offlineToggle" class="filter" data-cat="offline">Downloaded</button>
+  </div>
+  <div class="bulk">
+    <button id="downloadAll">Download all for offline</button>
+    <span id="storage"></span>
+  </div>
+</header>
+
+<main>
+  <ul id="list"></ul>
+</main>
+
+<footer id="player" hidden>
+  <div class="now">
+    <div id="nowTitle">—</div>
+    <div id="nowTime" class="time">0:00 / 0:00</div>
+  </div>
+  <input id="seek" type="range" min="0" max="1000" value="0">
+  <div class="controls">
+    <button id="prev" title="Previous">⏮</button>
+    <button id="playpause" title="Play/Pause">▶</button>
+    <button id="next" title="Next">⏭</button>
+    <button id="loop" title="Loop" class="toggle">↻</button>
+    <select id="timer" title="Sleep timer">
+      <option value="0">No timer</option>
+      <option value="10">10 min</option>
+      <option value="20">20 min</option>
+      <option value="30">30 min</option>
+      <option value="45">45 min</option>
+      <option value="60">60 min</option>
+      <option value="90">90 min</option>
+    </select>
+  </div>
+  <div id="timerStatus" class="timer-status"></div>
+</footer>
+
+<audio id="audio" preload="metadata"></audio>
+<script src="app.js"></script>
+</body>
+</html>

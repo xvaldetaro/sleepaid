@@ -1,0 +1,397 @@
+{
+  "tracks": [
+    {
+      "id": "white-noise-ac",
+      "title": "Old AC White Noise",
+      "file": "audio/white-noise-ac.mp3",
+      "duration": 600,
+      "category": "noise",
+      "loop": true
+    },
+    {
+      "id": "amber-amphitheater",
+      "title": "Amber Amphitheater",
+      "file": "audio/amber-amphitheater.mp3",
+      "duration": 2094,
+      "category": "story"
+    },
+    {
+      "id": "amberlight-caverns",
+      "title": "Amberlight Caverns",
+      "file": "audio/amberlight-caverns.mp3",
+      "duration": 2387,
+      "category": "story"
+    },
+    {
+      "id": "aurora-shoreline",
+      "title": "Aurora Shoreline",
+      "file": "audio/aurora-shoreline.mp3",
+      "duration": 2509,
+      "category": "story"
+    },
+    {
+      "id": "bicycle-ferry",
+      "title": "Bicycle Ferry",
+      "file": "audio/bicycle-ferry.mp3",
+      "duration": 2346,
+      "category": "story"
+    },
+    {
+      "id": "calm-cenote",
+      "title": "Calm Cenote",
+      "file": "audio/calm-cenote.mp3",
+      "duration": 1905,
+      "category": "story"
+    },
+    {
+      "id": "canopy-chorus",
+      "title": "Canopy Chorus",
+      "file": "audio/canopy-chorus.mp3",
+      "duration": 1824,
+      "category": "story"
+    },
+    {
+      "id": "chrono-gardens",
+      "title": "Chrono Gardens",
+      "file": "audio/chrono-gardens.mp3",
+      "duration": 2336,
+      "category": "story"
+    },
+    {
+      "id": "clockmaker-shop",
+      "title": "Clockmaker Shop",
+      "file": "audio/clockmaker-shop.mp3",
+      "duration": 2211,
+      "category": "story"
+    },
+    {
+      "id": "clocktower-district",
+      "title": "Clocktower District",
+      "file": "audio/clocktower-district.mp3",
+      "duration": 3087,
+      "category": "story"
+    },
+    {
+      "id": "cloud-cafe",
+      "title": "Cloud Cafe",
+      "file": "audio/cloud-cafe.mp3",
+      "duration": 2120,
+      "category": "story"
+    },
+    {
+      "id": "cloud-plateau",
+      "title": "Cloud Plateau",
+      "file": "audio/cloud-plateau.mp3",
+      "duration": 318,
+      "category": "story"
+    },
+    {
+      "id": "cobalt-cliffs",
+      "title": "Cobalt Cliffs",
+      "file": "audio/cobalt-cliffs.mp3",
+      "duration": 2178,
+      "category": "story"
+    },
+    {
+      "id": "coral-sleepers",
+      "title": "Coral Sleepers",
+      "file": "audio/coral-sleepers.mp3",
+      "duration": 1470,
+      "category": "story"
+    },
+    {
+      "id": "desert-dream",
+      "title": "Desert Dream",
+      "file": "audio/desert-dream.mp3",
+      "duration": 1233,
+      "category": "story"
+    },
+    {
+      "id": "dreamy-iceland",
+      "title": "Dreamy Iceland",
+      "file": "audio/dreamy-iceland.mp3",
+      "duration": 1867,
+      "category": "story"
+    },
+    {
+      "id": "drifting-reef",
+      "title": "Drifting Reef",
+      "file": "audio/drifting-reef.mp3",
+      "duration": 1579,
+      "category": "story"
+    },
+    {
+      "id": "driftwood-village",
+      "title": "Driftwood Village",
+      "file": "audio/driftwood-village.mp3",
+      "duration": 1482,
+      "category": "story"
+    },
+    {
+      "id": "dune-sea",
+      "title": "Dune Sea",
+      "file": "audio/dune-sea.mp3",
+      "duration": 2070,
+      "category": "story"
+    },
+    {
+      "id": "gentle-planet",
+      "title": "Gentle Planet",
+      "file": "audio/gentle-planet.mp3",
+      "duration": 2232,
+      "category": "story"
+    },
+    {
+      "id": "harbor-stroll",
+      "title": "Harbor Stroll",
+      "file": "audio/harbor-stroll.mp3",
+      "duration": 3230,
+      "category": "story"
+    },
+    {
+      "id": "hidden-aqueduct",
+      "title": "Hidden Aqueduct",
+      "file": "audio/hidden-aqueduct.mp3",
+      "duration": 2203,
+      "category": "story"
+    },
+    {
+      "id": "historical-square",
+      "title": "Historical Square",
+      "file": "audio/historical-square.mp3",
+      "duration": 1322,
+      "category": "story"
+    },
+    {
+      "id": "jurassic-joy",
+      "title": "Jurassic Joy",
+      "file": "audio/jurassic-joy.mp3",
+      "duration": 1968,
+      "category": "story"
+    },
+    {
+      "id": "lantern-market",
+      "title": "Lantern Market",
+      "file": "audio/lantern-market.mp3",
+      "duration": 2119,
+      "category": "story"
+    },
+    {
+      "id": "laundry-pier",
+      "title": "Laundry Pier",
+      "file": "audio/laundry-pier.mp3",
+      "duration": 2125,
+      "category": "story"
+    },
+    {
+      "id": "library-atrium",
+      "title": "Library Atrium",
+      "file": "audio/library-atrium.mp3",
+      "duration": 2381,
+      "category": "story"
+    },
+    {
+      "id": "lua-de-prata-em-iguacu",
+      "title": "Lua de Prata em Iguau",
+      "file": "audio/lua-de-prata-em-iguacu.mp3",
+      "duration": 1449,
+      "category": "story"
+    },
+    {
+      "id": "mosslight-ravine",
+      "title": "Mosslight Ravine",
+      "file": "audio/mosslight-ravine.mp3",
+      "duration": 2414,
+      "category": "story"
+    },
+    {
+      "id": "orchard-workshop",
+      "title": "Orchard Workshop",
+      "file": "audio/orchard-workshop.mp3",
+      "duration": 2085,
+      "category": "story"
+    },
+    {
+      "id": "painters-workshop",
+      "title": "Painter's Workshop",
+      "file": "audio/painters-workshop.mp3",
+      "duration": 2163,
+      "category": "story"
+    },
+    {
+      "id": "paper-boats",
+      "title": "Paper Boats",
+      "file": "audio/paper-boats.mp3",
+      "duration": 1792,
+      "category": "story"
+    },
+    {
+      "id": "pebble-shore",
+      "title": "Pebble Shore",
+      "file": "audio/pebble-shore.mp3",
+      "duration": 2135,
+      "category": "story"
+    },
+    {
+      "id": "polished-alleyways",
+      "title": "Polished Alleyways",
+      "file": "audio/polished-alleyways.mp3",
+      "duration": 2155,
+      "category": "story"
+    },
+    {
+      "id": "quiet-roundabout",
+      "title": "Quiet Roundabout",
+      "file": "audio/quiet-roundabout.mp3",
+      "duration": 2277,
+      "category": "story"
+    },
+    {
+      "id": "rail-viaduct",
+      "title": "Rail Viaduct",
+      "file": "audio/rail-viaduct.mp3",
+      "duration": 2247,
+      "category": "story"
+    },
+    {
+      "id": "rainlight-foundry",
+      "title": "Rainlight Foundry",
+      "file": "audio/rainlight-foundry.mp3",
+      "duration": 2948,
+      "category": "story"
+    },
+    {
+      "id": "river-lanterns",
+      "title": "River Lanterns",
+      "file": "audio/river-lanterns.mp3",
+      "duration": 2072,
+      "category": "story"
+    },
+    {
+      "id": "riverbank-workshop",
+      "title": "Riverbank Workshop",
+      "file": "audio/riverbank-workshop.mp3",
+      "duration": 2524,
+      "category": "story"
+    },
+    {
+      "id": "roselight-tundra",
+      "title": "Roselight Tundra",
+      "file": "audio/roselight-tundra.mp3",
+      "duration": 2204,
+      "category": "story"
+    },
+    {
+      "id": "satellite-cafe",
+      "title": "Satellite Cafe",
+      "file": "audio/satellite-cafe.mp3",
+      "duration": 1651,
+      "category": "story"
+    },
+    {
+      "id": "seaspray-terrace",
+      "title": "Seaspray Terrace",
+      "file": "audio/seaspray-terrace.mp3",
+      "duration": 2262,
+      "category": "story"
+    },
+    {
+      "id": "skybridge-walkway",
+      "title": "Skybridge Walkway",
+      "file": "audio/skybridge-walkway.mp3",
+      "duration": 2309,
+      "category": "story"
+    },
+    {
+      "id": "snail-post",
+      "title": "Snail Post",
+      "file": "audio/snail-post.mp3",
+      "duration": 2606,
+      "category": "story"
+    },
+    {
+      "id": "snoozement-park",
+      "title": "Snoozement Park",
+      "file": "audio/snoozement-park.mp3",
+      "duration": 3148,
+      "category": "story"
+    },
+    {
+      "id": "snowmelt-steps",
+      "title": "Snowmelt Steps",
+      "file": "audio/snowmelt-steps.mp3",
+      "duration": 2221,
+      "category": "story"
+    },
+    {
+      "id": "softwater-marsh",
+      "title": "Softwater Marsh",
+      "file": "audio/softwater-marsh.mp3",
+      "duration": 2110,
+      "category": "story"
+    },
+    {
+      "id": "submarine-arboretum",
+      "title": "Submarine Arboretum",
+      "file": "audio/submarine-arboretum.mp3",
+      "duration": 2249,
+      "category": "story"
+    },
+    {
+      "id": "tidal-roots",
+      "title": "Tidal Roots",
+      "file": "audio/tidal-roots.mp3",
+      "duration": 1877,
+      "category": "story"
+    },
+    {
+      "id": "tideglass-cove",
+      "title": "Tideglass Cove",
+      "file": "audio/tideglass-cove.mp3",
+      "duration": 2469,
+      "category": "story"
+    },
+    {
+      "id": "train-depot",
+      "title": "Train Depot",
+      "file": "audio/train-depot.mp3",
+      "duration": 2251,
+      "category": "story"
+    },
+    {
+      "id": "tram-stop",
+      "title": "Tram Stop",
+      "file": "audio/tram-stop.mp3",
+      "duration": 2012,
+      "category": "story"
+    },
+    {
+      "id": "undergrowth-secrets",
+      "title": "Undergrowth Secrets",
+      "file": "audio/undergrowth-secrets.mp3",
+      "duration": 2173,
+      "category": "story"
+    },
+    {
+      "id": "wind-lilies",
+      "title": "Wind Lilies",
+      "file": "audio/wind-lilies.mp3",
+      "duration": 2140,
+      "category": "story"
+    },
+    {
+      "id": "windmill-row",
+      "title": "Windmill Row",
+      "file": "audio/windmill-row.mp3",
+      "duration": 2375,
+      "category": "story"
+    },
+    {
+      "id": "zen-kyoto",
+      "title": "Zen Kyoto",
+      "file": "audio/zen-kyoto.mp3",
+      "duration": 2353,
+      "category": "story"
+    }
+  ]
+}
