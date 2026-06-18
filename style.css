@@ -79,4 +79,11 @@ footer#player {
   background: var(--panel2); color: var(--text); border: 0;
   height: 44px; border-radius: 10px; padding: 0 8px; font-size: 14px;
 }
+.ambient { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+#noiseToggle {
+  background: var(--panel2); color: var(--text); border: 0;
+  height: 40px; padding: 0 14px; border-radius: 10px; font-size: 14px; flex-shrink: 0;
+}
+#noiseToggle.on { background: var(--accent); color: #07101f; font-weight: 600; }
+#noiseVol { flex: 1; accent-color: var(--accent); }
 .timer-status { color: var(--muted); font-size: 12px; margin-top: 6px; min-height: 14px; }

@@ -6,7 +6,10 @@ let view = [];          // filtered list currently shown
 let current = -1;       // index into `tracks`
 let filterCat = "all";
 
-const audio = $("#audio");
+const audio = $("#audio");          // main player (stories or solo noise)
+const noise = $("#noise");          // independent ambient layer, loops underneath
+let noiseTrack = null;              // the track loaded into the ambient layer
+noise.volume = 0.7;
 
 // ---------- load + render ----------
 async function init() {
@@ -46,15 +49,17 @@ async function render() {
   });
   for (const t of view) {
     const li = document.createElement("li");
-    li.className = `row cat-${t.category}` + (tracks[current] === t ? " playing" : "");
+    const isNoise = t.category === "noise";
+    const active = isNoise ? (t === noiseTrack && !noise.paused) : (tracks[current] === t && !audio.paused);
+    li.className = `row cat-${t.category}` + (active ? " playing" : "");
     const downloaded = have.has(t.file);
     li.innerHTML = `
       <div class="meta">
         <div class="t">${escapeHtml(t.title)}</div>
-        <div class="sub">${t.category === "noise" ? "loops · " : ""}${fmt(t.duration)}${downloaded ? ' · <span class="badge">offline</span>' : ""}</div>
+        <div class="sub">${isNoise ? "ambient layer · loops · " : ""}${fmt(t.duration)}${downloaded ? ' · <span class="badge">offline</span>' : ""}</div>
       </div>
       <button class="dl ${downloaded ? "done" : ""}" data-file="${t.file}">${downloaded ? "✓" : "↓"}</button>`;
-    li.querySelector(".meta").onclick = () => playTrack(tracks.indexOf(t));
+    li.querySelector(".meta").onclick = () => isNoise ? toggleNoise(t) : playTrack(tracks.indexOf(t));
     li.querySelector(".dl").onclick = (e) => { e.stopPropagation(); downloadTrack(t, e.currentTarget); };
     list.appendChild(li);
   }
@@ -80,19 +85,21 @@ function playTrack(idx) {
   render();
 }
 
-function next() {
-  // advance within the current filtered view, skip nothing
+// manual skip only (no auto-advance); skips the ambient noise entries
+function step(dir) {
   const pos = view.indexOf(tracks[current]);
-  if (pos > -1 && pos + 1 < view.length) playTrack(tracks.indexOf(view[pos + 1]));
+  if (pos < 0) return;
+  for (let i = pos + dir; i >= 0 && i < view.length; i += dir) {
+    if (view[i].category !== "noise") { playTrack(tracks.indexOf(view[i])); return; }
+  }
 }
-function prev() {
-  const pos = view.indexOf(tracks[current]);
-  if (pos > 0) playTrack(tracks.indexOf(view[pos - 1]));
-}
+function next() { step(1); }
+function prev() { step(-1); }
 
-audio.addEventListener("ended", () => { if (!audio.loop) next(); });
-audio.addEventListener("play", () => { $("#playpause").textContent = "⏸"; syncMS("playing"); });
-audio.addEventListener("pause", () => { $("#playpause").textContent = "▶"; syncMS("paused"); });
+// no auto-advance — when a story ends, just stop (don't start the next one)
+audio.addEventListener("ended", () => render());
+audio.addEventListener("play", () => { $("#playpause").textContent = "⏸"; syncMS("playing"); render(); });
+audio.addEventListener("pause", () => { $("#playpause").textContent = "▶"; syncMS("paused"); render(); });
 audio.addEventListener("timeupdate", () => {
   const d = audio.duration || tracks[current]?.duration || 0;
   $("#nowTime").textContent = `${fmt(audio.currentTime)} / ${fmt(d)}`;
@@ -111,6 +118,23 @@ $("#playpause").onclick = () => (audio.paused ? audio.play() : audio.pause());
 $("#next").onclick = next;
 $("#prev").onclick = prev;
 $("#loop").onclick = () => { audio.loop = !audio.loop; $("#loop").classList.toggle("on", audio.loop); };
+
+// ---------- ambient noise layer (plays independently, under the story) ----------
+function defaultNoise() {
+  return noiseTrack || tracks.find((t) => t.category === "noise");
+}
+function toggleNoise(t) {
+  const track = t || defaultNoise();
+  if (!track) return;
+  if (noiseTrack !== track) { noiseTrack = track; noise.src = track.file; }
+  if (noise.paused) noise.play().catch(() => {});
+  else noise.pause();
+  $("#player").hidden = false;
+}
+noise.addEventListener("play", () => { $("#noiseToggle").classList.add("on"); render(); });
+noise.addEventListener("pause", () => { $("#noiseToggle").classList.remove("on"); render(); });
+$("#noiseToggle").onclick = () => toggleNoise();
+$("#noiseVol").addEventListener("input", (e) => { noise.volume = e.target.value / 100; });
 
 // ---------- media session (lock screen / background) ----------
 function updateMediaSession(t) {
@@ -150,12 +174,22 @@ $("#timer").addEventListener("change", (e) => {
   timerId = setTimeout(fadeOut, mins * 60000);
 });
 function fadeOut() {
+  // fade out and stop BOTH the story and the ambient noise layer
   clearInterval(timerStatusId);
-  let v = audio.volume;
+  const aBase = audio.volume, nBase = noise.volume;
+  let k = 1;
   fadeId = setInterval(() => {
-    v -= 0.05;
-    if (v <= 0) { clearInterval(fadeId); audio.pause(); audio.volume = 1; $("#timerStatus").textContent = "Sleep timer ended"; $("#timer").value = "0"; }
-    else audio.volume = v;
+    k -= 0.05;
+    if (k <= 0) {
+      clearInterval(fadeId);
+      audio.pause(); noise.pause();
+      audio.volume = aBase; noise.volume = nBase; // restore for next session
+      $("#timerStatus").textContent = "Sleep timer ended";
+      $("#timer").value = "0";
+    } else {
+      audio.volume = aBase * k;
+      noise.volume = nBase * k;
+    }
   }, 400);
 }
 
