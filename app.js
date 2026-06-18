@@ -7,46 +7,23 @@ let current = -1;       // index into `tracks`
 let filterCat = "all";
 
 const audio = $("#audio");          // main player (stories), an <audio> element
+const noiseEl = $("#noise");        // ambient layer, also an <audio> element
+noiseEl.volume = 0.7;
 
-// ---- ambient noise: Web Audio so the loop is gapless (no <audio> re-seek gap,
-// ---- no MP3 padding). Decoded once into a buffer, looped sample-accurately. ----
+// ambient noise uses an <audio> element (NOT Web Audio): on iOS only media
+// elements keep playing when the screen is locked / app is backgrounded.
+// The file is 30 min of internally-seamless AC, looped, so the only re-seek
+// gap lands once every 30 min — long after you're asleep.
 const Noise = {
-  ctx: null, gain: null, src: null, buffer: null, track: null,
-  vol: 0.7, playing: false,
-  async ensure() {
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-      this.gain = this.ctx.createGain();
-      this.gain.gain.value = this.vol;
-      this.gain.connect(this.ctx.destination);
-    }
-    if (this.ctx.state === "suspended") await this.ctx.resume();
+  track: null,
+  get playing() { return !noiseEl.paused; },
+  get vol() { return noiseEl.volume; },
+  start(track) {
+    if (this.track !== track) { this.track = track; noiseEl.src = track.file; }
+    return noiseEl.play();
   },
-  async load(track) {
-    const res = await fetch(track.file);              // cache-aware via service worker
-    const buf = await res.arrayBuffer();
-    this.buffer = await this.ctx.decodeAudioData(buf);
-    this.track = track;
-  },
-  async start(track) {
-    await this.ensure();
-    if (this.track !== track || !this.buffer) await this.load(track);
-    this.stop();
-    this.src = this.ctx.createBufferSource();
-    this.src.buffer = this.buffer;
-    this.src.loop = true;                              // gapless
-    this.src.connect(this.gain);
-    this.src.start();
-    this.playing = true;
-  },
-  stop() {
-    if (this.src) { try { this.src.stop(); } catch {} this.src.disconnect(); this.src = null; }
-    this.playing = false;
-  },
-  setVolume(v) {
-    this.vol = v;
-    if (this.gain && this.ctx) this.gain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.05);
-  },
+  stop() { noiseEl.pause(); },
+  setVolume(v) { noiseEl.volume = v; },
 };
 
 // ---------- load + render ----------
@@ -168,18 +145,18 @@ async function toggleNoise(t) {
   if (Noise.playing && Noise.track === track) {
     Noise.stop();
   } else {
-    $("#noiseToggle").textContent = "🌀 …";
     try { await Noise.start(track); } catch {}
-    $("#noiseToggle").textContent = "🌀 AC noise";
+    if (audio.paused) updateMediaSession(track, noiseEl); // own the lock screen if no story
   }
-  $("#noiseToggle").classList.toggle("on", Noise.playing);
   render();
 }
+noiseEl.addEventListener("play", () => { $("#noiseToggle").classList.add("on"); render(); });
+noiseEl.addEventListener("pause", () => { $("#noiseToggle").classList.remove("on"); render(); });
 $("#noiseToggle").onclick = () => toggleNoise();
 $("#noiseVol").addEventListener("input", (e) => Noise.setVolume(e.target.value / 100));
 
 // ---------- media session (lock screen / background) ----------
-function updateMediaSession(t) {
+function updateMediaSession(t, el = audio) {
   if (!("mediaSession" in navigator)) return;
   navigator.mediaSession.metadata = new MediaMetadata({
     title: t.title,
@@ -190,10 +167,11 @@ function updateMediaSession(t) {
       { src: "icons/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
   });
-  navigator.mediaSession.setActionHandler("play", () => audio.play());
-  navigator.mediaSession.setActionHandler("pause", () => audio.pause());
-  navigator.mediaSession.setActionHandler("nexttrack", next);
-  navigator.mediaSession.setActionHandler("previoustrack", prev);
+  navigator.mediaSession.setActionHandler("play", () => el.play());
+  navigator.mediaSession.setActionHandler("pause", () => el.pause());
+  // skip controls only make sense for stories
+  navigator.mediaSession.setActionHandler("nexttrack", el === audio ? next : null);
+  navigator.mediaSession.setActionHandler("previoustrack", el === audio ? prev : null);
 }
 function syncMS(state) {
   if ("mediaSession" in navigator) navigator.mediaSession.playbackState = state;
@@ -232,7 +210,7 @@ function fadeOut() {
       render();
     } else {
       audio.volume = aBase * k;
-      Noise.gain && Noise.gain.gain.setValueAtTime(nBase * k, Noise.ctx.currentTime);
+      Noise.setVolume(nBase * k);
     }
   }, 400);
 }
