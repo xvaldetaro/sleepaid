@@ -3,8 +3,8 @@
     {
       "id": "white-noise-ac",
       "title": "Old AC White Noise",
-      "file": "audio/white-noise-ac.mp3",
-      "duration": 600,
+      "file": "audio/white-noise-ac.wav",
+      "duration": 62,
       "category": "noise",
       "loop": true
     },

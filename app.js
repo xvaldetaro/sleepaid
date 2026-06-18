@@ -6,10 +6,48 @@ let view = [];          // filtered list currently shown
 let current = -1;       // index into `tracks`
 let filterCat = "all";
 
-const audio = $("#audio");          // main player (stories or solo noise)
-const noise = $("#noise");          // independent ambient layer, loops underneath
-let noiseTrack = null;              // the track loaded into the ambient layer
-noise.volume = 0.7;
+const audio = $("#audio");          // main player (stories), an <audio> element
+
+// ---- ambient noise: Web Audio so the loop is gapless (no <audio> re-seek gap,
+// ---- no MP3 padding). Decoded once into a buffer, looped sample-accurately. ----
+const Noise = {
+  ctx: null, gain: null, src: null, buffer: null, track: null,
+  vol: 0.7, playing: false,
+  async ensure() {
+    if (!this.ctx) {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this.gain = this.ctx.createGain();
+      this.gain.gain.value = this.vol;
+      this.gain.connect(this.ctx.destination);
+    }
+    if (this.ctx.state === "suspended") await this.ctx.resume();
+  },
+  async load(track) {
+    const res = await fetch(track.file);              // cache-aware via service worker
+    const buf = await res.arrayBuffer();
+    this.buffer = await this.ctx.decodeAudioData(buf);
+    this.track = track;
+  },
+  async start(track) {
+    await this.ensure();
+    if (this.track !== track || !this.buffer) await this.load(track);
+    this.stop();
+    this.src = this.ctx.createBufferSource();
+    this.src.buffer = this.buffer;
+    this.src.loop = true;                              // gapless
+    this.src.connect(this.gain);
+    this.src.start();
+    this.playing = true;
+  },
+  stop() {
+    if (this.src) { try { this.src.stop(); } catch {} this.src.disconnect(); this.src = null; }
+    this.playing = false;
+  },
+  setVolume(v) {
+    this.vol = v;
+    if (this.gain && this.ctx) this.gain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.05);
+  },
+};
 
 // ---------- load + render ----------
 async function init() {
@@ -50,7 +88,7 @@ async function render() {
   for (const t of view) {
     const li = document.createElement("li");
     const isNoise = t.category === "noise";
-    const active = isNoise ? (t === noiseTrack && !noise.paused) : (tracks[current] === t && !audio.paused);
+    const active = isNoise ? (Noise.playing && Noise.track === t) : (tracks[current] === t && !audio.paused);
     li.className = `row cat-${t.category}` + (active ? " playing" : "");
     const downloaded = have.has(t.file);
     li.innerHTML = `
@@ -121,20 +159,24 @@ $("#loop").onclick = () => { audio.loop = !audio.loop; $("#loop").classList.togg
 
 // ---------- ambient noise layer (plays independently, under the story) ----------
 function defaultNoise() {
-  return noiseTrack || tracks.find((t) => t.category === "noise");
+  return Noise.track || tracks.find((t) => t.category === "noise");
 }
-function toggleNoise(t) {
+async function toggleNoise(t) {
   const track = t || defaultNoise();
   if (!track) return;
-  if (noiseTrack !== track) { noiseTrack = track; noise.src = track.file; }
-  if (noise.paused) noise.play().catch(() => {});
-  else noise.pause();
   $("#player").hidden = false;
+  if (Noise.playing && Noise.track === track) {
+    Noise.stop();
+  } else {
+    $("#noiseToggle").textContent = "🌀 …";
+    try { await Noise.start(track); } catch {}
+    $("#noiseToggle").textContent = "🌀 AC noise";
+  }
+  $("#noiseToggle").classList.toggle("on", Noise.playing);
+  render();
 }
-noise.addEventListener("play", () => { $("#noiseToggle").classList.add("on"); render(); });
-noise.addEventListener("pause", () => { $("#noiseToggle").classList.remove("on"); render(); });
 $("#noiseToggle").onclick = () => toggleNoise();
-$("#noiseVol").addEventListener("input", (e) => { noise.volume = e.target.value / 100; });
+$("#noiseVol").addEventListener("input", (e) => Noise.setVolume(e.target.value / 100));
 
 // ---------- media session (lock screen / background) ----------
 function updateMediaSession(t) {
@@ -176,19 +218,21 @@ $("#timer").addEventListener("change", (e) => {
 function fadeOut() {
   // fade out and stop BOTH the story and the ambient noise layer
   clearInterval(timerStatusId);
-  const aBase = audio.volume, nBase = noise.volume;
+  const aBase = audio.volume, nBase = Noise.vol;
   let k = 1;
   fadeId = setInterval(() => {
     k -= 0.05;
     if (k <= 0) {
       clearInterval(fadeId);
-      audio.pause(); noise.pause();
-      audio.volume = aBase; noise.volume = nBase; // restore for next session
+      audio.pause(); audio.volume = aBase;     // restore for next session
+      Noise.stop(); Noise.setVolume(nBase);
+      $("#noiseToggle").classList.remove("on");
       $("#timerStatus").textContent = "Sleep timer ended";
       $("#timer").value = "0";
+      render();
     } else {
       audio.volume = aBase * k;
-      noise.volume = nBase * k;
+      Noise.gain && Noise.gain.gain.setValueAtTime(nBase * k, Noise.ctx.currentTime);
     }
   }, 400);
 }

@@ -69,14 +69,15 @@ for slug, d in sorted(story_dirs.items()):
     })
     print(f"  story  {slug:30s} {dur or '?':>5}s  {title_from(d, slug)}")
 
-# white noise (downloaded separately by yt-dlp)
-wn = AUDIO_OUT / "white-noise-ac.mp3"
+# white noise — a single seamless loop period (see /tmp/makeloop.py), WAV so it
+# loops gaplessly via Web Audio (no MP3 encoder padding at the seam)
+wn = AUDIO_OUT / "white-noise-ac.wav"
 noise = []
 if wn.exists():
     noise.append({
         "id": "white-noise-ac",
         "title": "Old AC White Noise",
-        "file": "audio/white-noise-ac.mp3",
+        "file": "audio/white-noise-ac.wav",
         "duration": duration(wn),
         "category": "noise",
         "loop": True,
