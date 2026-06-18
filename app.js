@@ -10,10 +10,10 @@ const audio = $("#audio");          // main player (stories), an <audio> element
 const noiseEl = $("#noise");        // ambient layer, also an <audio> element
 noiseEl.volume = 0.7;
 
-// ambient noise uses an <audio> element (NOT Web Audio): on iOS only media
-// elements keep playing when the screen is locked / app is backgrounded.
-// The file is 30 min of internally-seamless AC, looped, so the only re-seek
-// gap lands once every 30 min — long after you're asleep.
+// ambient noise uses a plain <audio> element played straight through (no loop
+// attribute): on iOS only a media element keeps playing when the screen locks,
+// and a *looping* element gets suspended in the background — so the file is 2h
+// of internally-seamless AC that just plays through, exactly like a story.
 const Noise = {
   track: null,
   get playing() { return !noiseEl.paused; },
@@ -146,7 +146,7 @@ async function toggleNoise(t) {
     Noise.stop();
   } else {
     try { await Noise.start(track); } catch {}
-    if (audio.paused) updateMediaSession(track, noiseEl); // own the lock screen if no story
+    updateMediaSession(track, noiseEl); // noise owns the now-playing / lock screen
   }
   render();
 }

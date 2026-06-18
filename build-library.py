@@ -69,19 +69,19 @@ for slug, d in sorted(story_dirs.items()):
     })
     print(f"  story  {slug:30s} {dur or '?':>5}s  {title_from(d, slug)}")
 
-# white noise — 30 min built by tiling the exact 62.23s loop period (see
-# /tmp/makeloop.py), as one continuous AAC stream so it's internally seamless.
-# An <audio> element (not Web Audio) so it keeps playing backgrounded on iOS.
-wn = AUDIO_OUT / "white-noise-ac.m4a"
+# white noise — 2h built by tiling the exact 62.23s loop period (see
+# /tmp/oneperiod.py), one continuous MP3 so it's internally seamless. Played
+# straight through with NO loop attribute, because iOS won't keep a looping
+# <audio> element playing in the background — a long file behaves like a story.
+wn = AUDIO_OUT / "white-noise-ac.mp3"
 noise = []
 if wn.exists():
     noise.append({
         "id": "white-noise-ac",
         "title": "Old AC White Noise",
-        "file": "audio/white-noise-ac.m4a",
+        "file": "audio/white-noise-ac.mp3",
         "duration": duration(wn),
         "category": "noise",
-        "loop": True,
     })
     print(f"  noise  white-noise-ac  {duration(wn)}s")
 else:

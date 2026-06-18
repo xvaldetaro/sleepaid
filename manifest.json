@@ -3,10 +3,9 @@
     {
       "id": "white-noise-ac",
       "title": "Old AC White Noise",
-      "file": "audio/white-noise-ac.m4a",
-      "duration": 1805,
-      "category": "noise",
-      "loop": true
+      "file": "audio/white-noise-ac.mp3",
+      "duration": 7218,
+      "category": "noise"
     },
     {
       "id": "amber-amphitheater",

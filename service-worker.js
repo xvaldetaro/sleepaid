@@ -1,4 +1,4 @@
-const SHELL_CACHE = "sleepaid-shell-v4";
+const SHELL_CACHE = "sleepaid-shell-v5";
 const AUDIO_CACHE = "sleepaid-audio-v1";
 const SHELL = [
   "./", "index.html", "style.css", "app.js",
